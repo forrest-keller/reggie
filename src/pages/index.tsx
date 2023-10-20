@@ -1,5 +1,6 @@
+import DFSAFlowchart from "@/components/dfsa-flowchart";
 import useDfsa from "@/hooks/use-dfsa";
-import { readFile, readFileSync } from "fs";
+import { Box, Stack, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 
 type Transition = [[string, string], string];
@@ -22,9 +23,21 @@ const json = {
 const HomePage: NextPage = () => {
   const dfsa = useDfsa(json);
 
-  console.log("DFSA", dfsa);
-
-  return <div>Home</div>;
+  return (
+    <Stack height="80%" width="100%" direction="row" spacing={2}>
+      <Stack width="20vw">
+        <Box backgroundColor="blackAlpha.100">
+          <Text>Editing</Text>
+        </Box>
+        <Box backgroundColor="blackAlpha.100">
+          <Text>Running</Text>
+        </Box>
+      </Stack>
+      <Box width="100%">
+        <DFSAFlowchart dfsa={dfsa} />
+      </Box>
+    </Stack>
+  );
 };
 
 export default HomePage;

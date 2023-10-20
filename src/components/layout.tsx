@@ -6,7 +6,7 @@ interface LayoutProps extends PropsWithChildren {}
 
 const Layout: FunctionComponent<LayoutProps> = ({ children }) => {
   return (
-    <Box>
+    <Box height="100vh">
       <Box>
         <Center margin={5}>
           <Stack direction="row" spacing={2} align="center">
@@ -15,7 +15,7 @@ const Layout: FunctionComponent<LayoutProps> = ({ children }) => {
           </Stack>
         </Center>
       </Box>
-      <Box>{children}</Box>
+      {children}
     </Box>
   );
 };

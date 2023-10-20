@@ -1,27 +1,31 @@
 import DFSA from "./dfsa";
 
 class Traverser {
-    dfsa: DFSA
-    state: string
+  dfsa: DFSA;
+  state: string;
 
-    constructor(dfsa: DFSA) {
-        this.dfsa = dfsa
-        this.state = dfsa.startState
+  constructor(dfsa: DFSA) {
+    this.dfsa = dfsa;
+    this.state = dfsa.getStartState();
+  }
+
+  reset(): void {
+    this.state = this.dfsa.getStartState();
+  }
+
+  traverse(symbol: string): void {
+    const nextState = this.dfsa
+      .getTransitionFunction()
+      .get([this.state, symbol]);
+
+    if (nextState === undefined) {
+      throw new Error(
+        `No transition from state ${this.state} with symbol ${symbol}`
+      );
     }
 
-    reset(): void {
-        this.state = this.dfsa.startState
-    }
-
-    traverse(symbol: string): void {
-        const nextState = this.dfsa.transitionFunction.get([this.state, symbol])
-
-        if (nextState === undefined) {
-            throw new Error(`No transition from state ${this.state} with symbol ${symbol}`)
-        }
-
-        this.state = nextState
-    }
+    this.state = nextState;
+  }
 }
 
-export default Traverser
+export default Traverser;
