@@ -1,7 +1,7 @@
 {
   "states": ["q_0", "q_1"],
   "alphabet": ["1", "0"],
-  "transitionFunction": [
+  "transitions": [
     [["q_0", "0"], "q_0"],
     [["q_0", "1"], "q_1"],
     [["q_1", "0"], "q_0"],
