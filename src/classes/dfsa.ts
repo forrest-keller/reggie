@@ -1,7 +1,15 @@
+import crypto from "crypto";
+
+interface Transition {
+  from: string;
+  symbol: string;
+  to: string;
+}
+
 class DFSA {
   private states: Set<string>;
   private alphabet: Set<string>;
-  private transitionFunction: Map<[string, string], string>;
+  private transitionFunction: Map<string, Transition>;
   private startState: string;
   private acceptStates: Set<string>;
 
@@ -12,6 +20,10 @@ class DFSA {
     this.checkState(startState);
     this.startState = startState;
     this.acceptStates = new Set();
+  }
+
+  private serializeTransitionKey(from: string, symbol: string): string {
+    return crypto.createHash("md5").update(`${from}-${symbol}`).digest("hex");
   }
 
   private checkState(state: string): void {
@@ -36,7 +48,24 @@ class DFSA {
 
   removeState(state: string): void {
     this.checkState(state);
+
+    if (state === this.startState) {
+      throw new Error("Cannot remove start state");
+    }
+
     this.states.delete(state);
+
+    this.transitionFunction.forEach(({ from, to }, key) => {
+      if (!this.states.has(from) || !this.states.has(to)) {
+        this.transitionFunction.delete(key);
+      }
+    });
+
+    this.acceptStates.forEach((state) => {
+      if (!this.states.has(state)) {
+        this.acceptStates.delete(state);
+      }
+    });
   }
 
   getAlphabet(): Set<string> {
@@ -52,7 +81,7 @@ class DFSA {
     this.alphabet.delete(symbol);
   }
 
-  getTransitionFunction(): Map<[string, string], string> {
+  getTransitionFunction(): Map<string, Transition> {
     return this.transitionFunction;
   }
 
@@ -60,13 +89,15 @@ class DFSA {
     this.checkState(from);
     this.checkSymbol(symbol);
     this.checkState(to);
-    this.transitionFunction.set([from, symbol], to);
+    const key = this.serializeTransitionKey(from, symbol);
+    this.transitionFunction.set(key, { from, symbol, to });
   }
 
   removeTransition(from: string, symbol: string): void {
     this.checkState(from);
     this.checkSymbol(symbol);
-    this.transitionFunction.delete([from, symbol]);
+    const key = this.serializeTransitionKey(from, symbol);
+    this.transitionFunction.delete(key);
   }
 
   getStartState(): string {

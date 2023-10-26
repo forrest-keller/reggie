@@ -1,5 +1,6 @@
 import React, { FunctionComponent, memo } from "react";
 import { Handle, Position } from "reactflow";
+import Latex from "react-latex-next";
 
 interface CircleNodeProps {
   data: any;
@@ -27,10 +28,9 @@ const CircleNode: FunctionComponent<CircleNodeProps> = ({
       <Handle
         type="target"
         position={Position.Left}
-        onConnect={(params) => console.log("handle onConnect", params)}
         isConnectable={isConnectable}
       />
-      <div>{data.label}</div>
+      <Latex>{`$${data.label}$`}</Latex>
       <Handle
         type="source"
         position={Position.Right}

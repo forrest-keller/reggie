@@ -9,11 +9,13 @@ const transitions: Transition[] = [
   [["q_0", "0"], "q_0"],
   [["q_0", "1"], "q_1"],
   [["q_1", "0"], "q_0"],
-  [["q_1", "1"], "q_1"],
+  [["q_1", "1"], "q_2"],
+  [["q_1", "0"], "q_2"],
+  [["q_2", "0"], "q_1"],
 ];
 
 const json = {
-  states: ["q_0", "q_1"],
+  states: ["q_0", "q_1", "q_2"],
   alphabet: ["1", "0"],
   transitions,
   startState: "q_0",
@@ -24,19 +26,9 @@ const HomePage: NextPage = () => {
   const dfsa = useDfsa(json);
 
   return (
-    <Stack height="80%" width="100%" direction="row" spacing={2}>
-      <Stack width="20vw">
-        <Box backgroundColor="blackAlpha.100">
-          <Text>Editing</Text>
-        </Box>
-        <Box backgroundColor="blackAlpha.100">
-          <Text>Running</Text>
-        </Box>
-      </Stack>
-      <Box width="100%">
-        <DFSAFlowchart dfsa={dfsa} />
-      </Box>
-    </Stack>
+    <Box width="100vw" height="100vh">
+      <DFSAFlowchart dfsa={dfsa} />
+    </Box>
   );
 };
 
